@@ -1,4 +1,15 @@
+require 'api_constraints'
+
 AbbyNormal::Application.routes.draw do
+  namespace :api, defaults: {format: 'json'} do
+    scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
+      resources :packages
+
+      match 'tasks/claim' => 'tasks#claim', :via => :post
+      match 'tasks/:id' => 'tasks#update', :via => :put
+    end
+  end
+
   resources :tasks
 
 
