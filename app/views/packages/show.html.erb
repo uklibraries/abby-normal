@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Batch:</b>
+  <%= render @package.batch %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= render @package.status %>
+</p>
+
+<p>
+  <b>Sip path:</b>
+  <%= @package.sip_path %>
+</p>
+
+<p>
+  <b>Aip identifier:</b>
+  <%= @package.aip_identifier %>
+</p>
+
+<p>
+  <b>Dip identifier:</b>
+  <%= @package.dip_identifier %>
+</p>
+
+<p>
+  <b>Oral history:</b>
+  <%= @package.oral_history %>
+</p>
+
+<p>
+  <b>Dark archive:</b>
+  <%= @package.dark_archive %>
+</p>
+
+<p>
+  <b>Approved:</b>
+  <%= @package.approved %>
+</p>
+
+
+<%= link_to 'Edit', edit_package_path(@package) %> |
+<%= link_to 'Back', packages_path %>

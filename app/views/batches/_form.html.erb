@@ -1,0 +1,41 @@
+<%= form_for(@batch) do |f| %>
+  <% if @batch.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@batch.errors.count, "error") %> prohibited this batch from being saved:</h2>
+
+      <ul>
+      <% @batch.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :batch_type %><br />
+    <%= collection_select(:batch, :batch_type_id, BatchType.all, :id, :name) %>
+  </div>
+  <div class="field">
+    <%= f.label :status %><br />
+    <%= collection_select(:batch, :status_id, Status.all, :id, :name, include_blank: true) %>
+  </div>
+  <div class="field">
+    <%= f.label :server %><br />
+    <%= collection_select(:batch, :server_id, Server.all, :id, :name) %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :oral_history %><br />
+    <%= f.check_box :oral_history %>
+  </div>
+  <div class="field">
+    <%= f.label :dark_archive %><br />
+    <%= f.check_box :dark_archive %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

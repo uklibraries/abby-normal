@@ -1,0 +1,31 @@
+<h1>Listing batches</h1>
+
+<%= paginate @batches %>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Status</th>
+    <th>Batch type</th>
+    <th>Server</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @batches.each do |batch| %>
+  <tr>
+    <td><%= batch.name %></td>
+    <td><%= render batch.status %></td>
+    <td><%= render batch.batch_type %></td>
+    <td><%= render batch.server %></td>
+    <td><%= link_to 'Show', batch %></td>
+    <td><%= link_to 'Edit', edit_batch_path(batch) %></td>
+    <td><%= link_to 'Destroy', batch, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Batch', new_batch_path %>

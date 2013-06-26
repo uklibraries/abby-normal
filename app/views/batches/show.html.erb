@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Batch type:</b>
+  <%= render @batch.batch_type %>
+</p>
+
+<p>
+  <b>Server:</b>
+  <%= render @batch.server %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @batch.name %>
+</p>
+
+<p>
+  <b>Oral history:</b>
+  <%= @batch.oral_history %>
+</p>
+
+<p>
+  <b>Dark archive:</b>
+  <%= @batch.dark_archive %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= render @batch.status %>
+</p>
+
+<%= link_to 'Edit', edit_batch_path(@batch) %> |
+<%= link_to 'Back', batches_path %>
