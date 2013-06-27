@@ -5,6 +5,7 @@ class Task < ActiveRecord::Base
   attr_accessible :package_id, :type_id, :status_id
   before_create :set_type_and_status
   before_update :check_status
+  has_paper_trail
 
   def ready?
     # We only block status progression at the
@@ -60,6 +61,15 @@ class Task < ActiveRecord::Base
     type = Type.where(:id => self.type_id + 1).first
     if type
       package.tasks.create(:type_id => type.id)
+      if type == Type.approve_package
+        package.status = Status.awaiting_approval
+        package.save
+        batch = Batch.find(package.batch_id)
+        if batch.packages.where(:status_id => package.status_id).count == batch.packages.count
+          batch.status = Status.awaiting_approval
+          batch.save
+        end
+      end
     else
       package.status = Status.completed
       package.save

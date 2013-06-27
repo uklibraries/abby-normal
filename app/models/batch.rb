@@ -6,6 +6,8 @@ class Batch < ActiveRecord::Base
   attr_accessible :dark_archive, :name, :oral_history, :batch_type_id, :server_id, :status_id
   before_create :mark_as_started
   after_create :create_packages
+  before_update :check_status
+  has_paper_trail
 
   private
 
@@ -34,5 +36,28 @@ class Batch < ActiveRecord::Base
         requires_approval: tickets[i] <= limit
       )
     end
+  end
+
+  def check_status
+    if self.status_id_changed?
+      method = "when_#{self.status.name}".to_sym
+      begin
+        logger.debug "\n#{method}"
+        send(method)
+      rescue
+        logger.debug "\ncan't dispatch to #{method}"
+      end
+    end
+  end
+
+  def when_approved
+    self.packages.where(status_id: [
+      Status.awaiting_approval.id,
+      Status.rejected.id,
+    ]).each do |package|
+      package.status = Status.approved
+      package.save
+    end
+
   end
 end

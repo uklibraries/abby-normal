@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130627150739) do
+ActiveRecord::Schema.define(:version => 20130627193633) do
 
   create_table "api_keys", :force => true do |t|
     t.string   "access_token"
@@ -39,6 +39,19 @@ ActiveRecord::Schema.define(:version => 20130627150739) do
 
   add_index "batches", ["batch_type_id"], :name => "index_batches_on_batch_type_id"
   add_index "batches", ["server_id"], :name => "index_batches_on_server_id"
+
+  create_table "log_entries", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "package_id"
+    t.boolean  "approved"
+    t.boolean  "automatic"
+    t.string   "notes"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "log_entries", ["package_id"], :name => "index_log_entries_on_package_id"
+  add_index "log_entries", ["user_id"], :name => "index_log_entries_on_user_id"
 
   create_table "packages", :force => true do |t|
     t.integer  "batch_id"
@@ -105,5 +118,16 @@ ActiveRecord::Schema.define(:version => 20130627150739) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "versions", :force => true do |t|
+    t.string   "item_type",  :null => false
+    t.integer  "item_id",    :null => false
+    t.string   "event",      :null => false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
 
 end

@@ -5,7 +5,9 @@ class Package < ActiveRecord::Base
   attr_accessible :aip_identifier, :approved, :dark_archive, :dip_identifier, :oral_history, :sip_path, :batch_id, :status_id, :requires_approval
   before_create :mark_as_started
   after_create :create_first_task
+  before_update :check_status
   after_update :check_task_statuses
+  has_paper_trail
 
   private
 
@@ -30,6 +32,34 @@ class Package < ActiveRecord::Base
         task.save
       end
     end
+  end
+
+  def check_status
+    if self.status_id_changed?
+      method = "when_#{self.status.name}".to_sym
+      begin
+        logger.debug "\n#{method}"
+        send(method)
+      rescue
+        logger.debug "\ncan't dispatch to #{method}"
+      end
+    end
+  end
+
+  def when_approved
+    self.tasks.where(:type_id => Type.approve_package.id).each do |task|
+      task.status = Status.completed
+      task.save
+    end
+    batch = Batch.find(self.batch_id)
+    if batch.status == Status.awaiting_approval
+      batch.status = Status.under_review
+      batch.save
+    end
+  end
+
+  def when_rejected
+    when_approved
   end
 
   def when_failed

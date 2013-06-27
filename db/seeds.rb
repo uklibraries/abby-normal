@@ -28,6 +28,7 @@ end
   'Create AIP',
   'Create DIP',
   'Store Test DIP',
+  'Store Test Oral History Files',
   'Create Solr JSON',
   'Index into Test Solr',
 
@@ -41,10 +42,10 @@ end
   'Index into Solr',
   'Store AIP',
   'Store Logs',
-  'Delete SIP',
-  'Delete AIP',
-  'Delete DIP',
-  'Delete Solr JSON',
+  'Delete SIP Cache',
+  'Delete AIP Cache',
+  'Delete DIP Cache',
+  'Delete Solr JSON Cache',
   'Delete Log Cache',
   'Archive Package',
 ].each do |type|
