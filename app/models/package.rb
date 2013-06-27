@@ -1,8 +1,8 @@
 class Package < ActiveRecord::Base
   belongs_to :batch
   belongs_to :status
-  has_many :tasks
-  attr_accessible :aip_identifier, :approved, :dark_archive, :dip_identifier, :oral_history, :sip_path, :batch_id, :status_id
+  has_many :tasks, dependent: :destroy
+  attr_accessible :aip_identifier, :approved, :dark_archive, :dip_identifier, :oral_history, :sip_path, :batch_id, :status_id, :requires_approval
   before_create :mark_as_started
   after_create :create_first_task
   after_update :check_task_statuses

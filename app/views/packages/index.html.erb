@@ -10,6 +10,7 @@
     <th>Aip identifier</th>
     <th>Dip identifier</th>
     <th>Approved</th>
+    <th>Requires approval</th>
     <th></th>
     <th></th>
     <th></th>
@@ -19,10 +20,11 @@
   <tr>
     <td><%= render package.batch %></td>
     <td><%= render package.status %></td>
-    <td><%= package.sip_path %></td>
+    <td><%= File.basename package.sip_path %></td>
     <td><%= package.aip_identifier %></td>
     <td><%= package.dip_identifier %></td>
     <td><%= package.approved %></td>
+    <th><%= package.requires_approval %></td>
     <td><%= link_to 'Show', package %></td>
     <td><%= link_to 'Edit', edit_package_path(package) %></td>
     <td><%= link_to 'Destroy', package, method: :delete, data: { confirm: 'Are you sure?' } %></td>

@@ -6,18 +6,37 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-['ready', 'started', 'failed', 'completed', 'archived', 'not ready'].each do |status|
+[
+  'ready', 
+  'started', 
+  'failed', 
+  'completed', 
+  'archived', 
+  'not ready',
+  'awaiting approval',
+  'under review',
+  'approved',
+  'rejected',
+].each do |status|
   Status.create(name: status)
 end
 
 [
+  # pre-approval
   'Get Identifiers',
   'Pull SIP',
   'Create AIP',
   'Create DIP',
+  'Store Test DIP',
+  'Create Solr JSON',
+  'Index into Test Solr',
+
+  # approval
+  'Approve Package',
+
+  #post-approval
   'Store DIP',
   'Store Oral History Files',
-  'Create Solr JSON',
   'Store Solr JSON',
   'Index into Solr',
   'Store AIP',
@@ -27,7 +46,7 @@ end
   'Delete DIP',
   'Delete Solr JSON',
   'Delete Log Cache',
-  'Archive Batch',
+  'Archive Package',
 ].each do |type|
   Type.create(name: type)
 end

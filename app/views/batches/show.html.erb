@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <p>
   <b>Batch type:</b>
   <%= render @batch.batch_type %>
@@ -30,5 +28,7 @@
   <%= render @batch.status %>
 </p>
 
+<% if can? :update, @batch %>
 <%= link_to 'Edit', edit_batch_path(@batch) %> |
+<% end %>
 <%= link_to 'Back', batches_path %>

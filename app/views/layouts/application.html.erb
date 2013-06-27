@@ -8,6 +8,19 @@
 </head>
 <body>
 
+<p>
+  <%= link_to "Batches", batches_path %> |
+  <%= link_to "Packages", packages_path %> |
+  <%= link_to "Tasks", tasks_path %>
+  <%- if user_signed_in? -%>
+  | <%= link_to "Sign Out", destroy_user_session_path, :method => :delete %>
+  <%- end -%>
+</p>
+
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+<p class="error"><%= flash[:error] %></p>
+
 <%= yield %>
 
 </body>

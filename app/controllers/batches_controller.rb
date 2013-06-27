@@ -1,4 +1,7 @@
 class BatchesController < ApplicationController
+  before_filter :authenticate_user!
+  load_and_authorize_resource
+
   # GET /batches
   # GET /batches.json
   def index
@@ -13,8 +16,6 @@ class BatchesController < ApplicationController
   # GET /batches/1
   # GET /batches/1.json
   def show
-    @batch = Batch.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @batch }
@@ -24,8 +25,6 @@ class BatchesController < ApplicationController
   # GET /batches/new
   # GET /batches/new.json
   def new
-    @batch = Batch.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @batch }
@@ -34,7 +33,6 @@ class BatchesController < ApplicationController
 
   # GET /batches/1/edit
   def edit
-    @batch = Batch.find(params[:id])
   end
 
   # POST /batches
@@ -56,8 +54,6 @@ class BatchesController < ApplicationController
   # PUT /batches/1
   # PUT /batches/1.json
   def update
-    @batch = Batch.find(params[:id])
-
     respond_to do |format|
       if @batch.update_attributes(params[:batch])
         format.html { redirect_to @batch, notice: 'Batch was successfully updated.' }
@@ -72,7 +68,6 @@ class BatchesController < ApplicationController
   # DELETE /batches/1
   # DELETE /batches/1.json
   def destroy
-    @batch = Batch.find(params[:id])
     @batch.destroy
 
     respond_to do |format|
