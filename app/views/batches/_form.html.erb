@@ -1,40 +1,17 @@
-<%= form_for(@batch) do |f| %>
-  <% if @batch.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@batch.errors.count, "error") %> prohibited this batch from being saved:</h2>
+<%= simple_form_for(@batch) do |f| %>
+  <%= f.input :name %>
 
-      <ul>
-      <% @batch.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
+  <%= f.association :batch_type, :default => 1 %>
+
+  <% unless f.object.new_record? %>
+    <%= f.association :status, :default => 1 %>
   <% end %>
 
-  <div class="field">
-    <%= f.label :batch_type %><br />
-    <%= collection_select(:batch, :batch_type_id, BatchType.all, :id, :name) %>
-  </div>
-  <div class="field">
-    <%= f.label :status %><br />
-    <%= collection_select(:batch, :status_id, Status.all, :id, :name, include_blank: true) %>
-  </div>
-  <div class="field">
-    <%= f.label :server %><br />
-    <%= collection_select(:batch, :server_id, Server.all, :id, :name) %>
-  </div>
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :oral_history %><br />
-    <%= f.check_box :oral_history %>
-  </div>
-  <div class="field">
-    <%= f.label :dark_archive %><br />
-    <%= f.check_box :dark_archive %>
-  </div>
+  <%= f.association :server, :default => 1 %>
+
+  <%= f.input :oral_history, :as => :radio_buttons %>
+  <%= f.input :dark_archive, :as => :radio_buttons %>
+
   <div class="actions">
     <%= f.submit %>
   </div>

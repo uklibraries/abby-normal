@@ -1,48 +1,13 @@
-<%= form_for(@package) do |f| %>
-  <% if @package.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@package.errors.count, "error") %> prohibited this package from being saved:</h2>
-
-      <ul>
-      <% @package.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :batch %><br />
-    <%= collection_select(:package, :batch_id, Batch.all, :id, :name) %>
-  </div>
-  <div class="field">
-    <%= f.label :status %><br />
-    <%= collection_select(:package, :status_id, Status.all, :id, :name) %>
-  </div>
-  <div class="field">
-    <%= f.label :sip_path %><br />
-    <%= f.text_field :sip_path %>
-  </div>
-  <div class="field">
-    <%= f.label :aip_identifier %><br />
-    <%= f.text_field :aip_identifier %>
-  </div>
-  <div class="field">
-    <%= f.label :dip_identifier %><br />
-    <%= f.text_field :dip_identifier %>
-  </div>
-  <div class="field">
-    <%= f.label :oral_history %><br />
-    <%= f.check_box :oral_history %>
-  </div>
-  <div class="field">
-    <%= f.label :dark_archive %><br />
-    <%= f.check_box :dark_archive %>
-  </div>
-  <div class="field">
-    <%= f.label :approved %><br />
-    <%= f.check_box :approved %>
-  </div>
+<%= simple_form_for(@package) do |f| %>
+  <%= f.input :sip_path %>
+  <%= f.association :status %>
+  <%= f.association :batch %>
+  <%= f.input :aip_identifier %>
+  <%= f.input :dip_identifier %>
+  <%= f.input :oral_history, :as => :radio_buttons %>
+  <%= f.input :dark_archive, :as => :radio_buttons %>
+  <%= f.input :approved, :as => radio_buttons %>
+  
   <div class="actions">
     <%= f.submit %>
   </div>

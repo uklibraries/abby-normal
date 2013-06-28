@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130627193633) do
+ActiveRecord::Schema.define(:version => 20130628135800) do
 
   create_table "api_keys", :force => true do |t|
     t.string   "access_token"
@@ -30,10 +30,10 @@ ActiveRecord::Schema.define(:version => 20130627193633) do
     t.integer  "batch_type_id"
     t.integer  "server_id"
     t.string   "name"
-    t.boolean  "oral_history"
-    t.boolean  "dark_archive"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.boolean  "oral_history",  :default => false
+    t.boolean  "dark_archive",  :default => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
     t.integer  "status_id"
   end
 
@@ -59,11 +59,11 @@ ActiveRecord::Schema.define(:version => 20130627193633) do
     t.string   "sip_path"
     t.string   "aip_identifier"
     t.string   "dip_identifier"
-    t.boolean  "oral_history"
-    t.boolean  "dark_archive"
+    t.boolean  "oral_history",      :default => false
+    t.boolean  "dark_archive",      :default => false
     t.boolean  "approved"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.boolean  "requires_approval"
   end
 
