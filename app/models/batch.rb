@@ -9,6 +9,28 @@ class Batch < ActiveRecord::Base
   before_update :check_status
   has_paper_trail
 
+  def notify message
+    if message
+      method = "when_#{message.to_s.gsub(/\s+/, '_')}".to_sym
+      if respond_to? method
+        logger.debug "\nDEBUG batch #{self.id}: dispatching to #{method}"
+        send(method)
+      else
+        logger.debug "\nDEBUG batch #{self.id}: can't dispatch to #{method}"
+      end
+    end
+  end
+
+  def mark_reviewed
+    if self.status == Status.awaiting_approval
+      self.update_attributes(:status_id => Status.under_review.id)
+    end
+
+    if enough_packages_approved?
+      self.update_attributes(:status_id => Status.approved.id)
+    end
+  end
+
   private
 
   def mark_as_started
@@ -40,24 +62,34 @@ class Batch < ActiveRecord::Base
 
   def check_status
     if self.status_id_changed?
-      method = "when_#{self.status.name}".to_sym
-      begin
-        logger.debug "\n#{method}"
-        send(method)
-      rescue
-        logger.debug "\ncan't dispatch to #{method}"
+      if self.status == Status.approved
+        approve_packages
       end
+    end
+    
+    if enough_packages_approved?
+      self.status = Status.approved
+      approve_packages
     end
   end
 
-  def when_approved
+  def enough_packages_approved?
+    self.packages.where(
+      :requires_approval => true
+    ).reject { |package|
+      package.status == Status.approved
+    }.empty?
+  end
+
+  def approve_packages
     self.packages.where(status_id: [
       Status.awaiting_approval.id,
       Status.rejected.id,
     ]).each do |package|
-      package.status = Status.approved
-      package.save
+      package.update_attributes(
+        :approved => true,
+        :status_id => Status.approved.id,
+      )
     end
-
   end
 end

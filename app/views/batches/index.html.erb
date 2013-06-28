@@ -1,14 +1,13 @@
 <% title "Batches" %>
-
-<h1>Listing batches</h1>
+<%= show_title %>
 
 <%= paginate @batches %>
 
-<table>
+<table class="table table-striped">
   <tr>
     <th>Name</th>
     <th>Status</th>
-    <th>Batch type</th>
+    <th>Type</th>
     <th>Server</th>
     <th></th>
     <th></th>

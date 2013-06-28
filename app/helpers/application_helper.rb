@@ -3,6 +3,10 @@ module ApplicationHelper
     content_for(:title) { page_title }
   end
 
+  def show_title
+    content_tag :h1, content_for(:title)
+  end
+
   def display_base_errors resource
     return '' if (resource.errors.empty?) or (resource.errors[:base].empty?)
     messages = resource.errors[:base].map { |msg| content_tag(:p, msg) }.join

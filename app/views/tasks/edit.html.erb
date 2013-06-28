@@ -1,6 +1,5 @@
-<% title "Editing task #{@task.id}" %>
-
-<h1>Editing task</h1>
+<% title "Editing task #{render @task.type} for #{render @task.package}" %>
+<%= show_title %>
 
 <%= render 'form' %>
 

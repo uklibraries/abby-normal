@@ -1,10 +1,9 @@
 <% title "Tasks" %>
-
-<h1>Listing tasks</h1>
+<%= show_title %>
 
 <%= paginate @tasks %>
 
-<table>
+<table class="table table-striped">
   <tr>
     <th>Package</th>
     <th>Type</th>

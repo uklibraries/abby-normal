@@ -1,7 +1,7 @@
 <%= simple_form_for(@task) do |f| %>
-  <% f.association :package %>
-  <% f.association :task %>
-  <% f.association :status %>
+  <%= f.association :package %>
+  <%= f.association :type %>
+  <%= f.association :status %>
 
   <div class="actions">
     <%= f.submit %>

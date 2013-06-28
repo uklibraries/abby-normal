@@ -1,6 +1,5 @@
-<% title "Editing package #{@package.id}" %>
-
-<h1>Editing package</h1>
+<% title "Editing package #{File.basename @package.sip_path}" %>
+<%= show_title %>
 
 <%= render 'form' %>
 

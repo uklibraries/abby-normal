@@ -4,8 +4,21 @@ class Task < ActiveRecord::Base
   belongs_to :status
   attr_accessible :package_id, :type_id, :status_id
   before_create :set_type_and_status
+  after_create :check_package
   before_update :check_status
   has_paper_trail
+
+  def notify message
+    if message
+      method = "when_#{message.to_s.gsub(/\s+/, '_')}".to_sym
+      if respond_to? method
+        logger.debug "\nDEBUG task #{self.id}: dispatching to #{method}"
+        send(method)
+      else
+        logger.debug "\nDEBUG task #{self.id}: can't dispatch to #{method}"
+      end
+    end
+  end
 
   def ready?
     # We only block status progression at the
@@ -28,6 +41,11 @@ class Task < ActiveRecord::Base
     end
   end
 
+  def set_readiness
+    determine_readiness
+    self.save
+  end
+
   private
   
   def set_type_and_status
@@ -40,36 +58,26 @@ class Task < ActiveRecord::Base
 
   def check_status
     if self.status_id_changed?
-      method = "when_#{self.status.name}".to_sym
-      begin
-        logger.debug "\n#{method}"
-        send(method)
-      rescue
-        logger.debug "\ncan't dispatch to #{method}"
+      determine_readiness
+      create_next_task
+    end
+  end
+
+  def determine_readiness
+    if [Status.ready, Status.not_ready].include? self.status
+      if self.ready?
+        self.status = Status.ready
+      else
+        self.status = Status.not_ready
       end
     end
   end
 
-  def when_ready
-    unless self.ready?
-      self.status = Status.not_ready
-    end
-  end
-
-  def when_completed
+  def create_next_task
     package = Package.find(self.package_id)
     type = Type.where(:id => self.type_id + 1).first
     if type
       package.tasks.create(:type_id => type.id)
-      if type == Type.approve_package
-        package.status = Status.awaiting_approval
-        package.save
-        batch = Batch.find(package.batch_id)
-        if batch.packages.where(:status_id => package.status_id).count == batch.packages.count
-          batch.status = Status.awaiting_approval
-          batch.save
-        end
-      end
     else
       package.status = Status.completed
       package.save
@@ -77,9 +85,10 @@ class Task < ActiveRecord::Base
     self.status = Status.archived
   end
 
-  def when_failed
-    package = Package.find(self.package_id)
-    package.status = Status.failed
-    package.save
+  def check_package
+    if self.type == Type.approve_package
+      package = Package.find(self.package_id)
+      package.update_attributes(:status_id => Status.awaiting_approval.id)
+    end
   end
 end
