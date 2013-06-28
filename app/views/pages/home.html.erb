@@ -1,0 +1,24 @@
+<% title "Welcome" %>
+
+<h1>Abby Normal</h1>
+
+<% if user_signed_in? %>
+<p class="lead">
+Welcome.  There are so many things to make and things to do.
+</p>
+
+<ul class="unstyled">
+  <li>
+    <i class="icon-plus-sign"></i>
+    <%= link_to "Submit a batch", new_batch_path %>
+  </li>
+  <li>
+    <i class="icon-eye-open"></i>
+    <%= link_to "Inspect batches", batches_path %>
+  </li>
+</ul>
+<% else %>
+<p class="lead">
+Welcome.  
+</p>
+<% end %>

@@ -42,5 +42,6 @@ gem 'simple_form'
 
 gem 'cancan'
 gem 'devise'
+gem 'high_voltage'
 gem 'kaminari'
 gem 'paper_trail'
