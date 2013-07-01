@@ -4,28 +4,52 @@
   <tr>
     <th>Sip name</th>
     <th>Status</th>
-    <th>Batch</th>
     <th></th>
     <th></th>
+    <% if can? :approve, Package %>
     <th></th>
+    <% end %>
+    <% if can? :reject, Package %>
     <th></th>
+    <% end %>
+    <% if can? :edit, Package %>
     <th></th>
+    <% end %>
+    <% if can? :destroy, Package %>
+    <th></th>
+    <% end %>
   </tr>
 
 <% @packages.each do |package| %>
   <tr>
-    <td><%= File.basename package.sip_path %></td>
+    <td><%= link_to File.basename(package.sip_path), package %></td>
     <td><%= render package.status %></td>
-    <td><%= render package.batch %></td>
     <td>
     <% if inspection_link(package) %>
     <%= link_to 'Inspect', inspection_link(package) %>
     <% end %>
     </td>
+    <% if can? :approve, Package %>
+    <td>
+      <% if approvable(package) %>
+      <%= link_to 'Approve', approve_package_path(package), method: :put %>
+      <% end %>
+    <% end %>
+    </td>
+    <% if can? :reject, Package %>
+    <td>
+      <% if rejectable(package) %>
+      <%= link_to 'Reject', reject_package_path(package), method: :put %>
+      <% end %>
+    </td>
+    <% end %>
     <td><%= link_to 'Discuss', discussion_link(package) %></td>
-    <td><%= link_to 'Show', package %></td>
+    <% if can? :edit, Package %>
     <td><%= link_to 'Edit', edit_package_path(package) %></td>
+    <% end %>
+    <% if can? :destroy, Package %>
     <td><%= link_to 'Destroy', package, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <% end %>
   </tr>
 <% end %>
 </table>

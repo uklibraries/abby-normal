@@ -45,4 +45,4 @@
 <% if can? :update, @package %>
 <%= link_to 'Edit', edit_package_path(@package) %> |
 <% end %>
-<%= link_to 'Back', packages_path %>
+<%= link_to 'Back', batch_path(@package.batch_id) %>

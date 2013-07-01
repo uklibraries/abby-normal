@@ -10,6 +10,14 @@ class Package < ActiveRecord::Base
   after_save :ping_batch
   has_paper_trail
 
+  scope :in_progress, :conditions => [
+    Status.approved,
+    Status.rejected,
+    Status.awaiting_approval,
+    Status.under_review,
+    Status.started,
+  ].map { |s| "status_id = #{s.id}" }.join(' OR ')
+
   def name
     File.basename self.sip_path
   end

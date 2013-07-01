@@ -1,7 +1,7 @@
 class BatchesController < ApplicationController
   before_filter :authenticate_user!
   load_and_authorize_resource
-  helper_method :sort_column, :sort_direction
+  helper_method :sort_column, :sort_direction, :batch_type, :approvable, :rejectable
 
   # GET /batches
   # GET /batches.json
@@ -17,8 +17,7 @@ class BatchesController < ApplicationController
   # GET /batches/1
   # GET /batches/1.json
   def show
-    #@packages = @batch.packages.where.not(status_id: Status.archived.id).not(status_id: Status.completed.id).order("status_id sort desc").page(params[:page])
-    @packages = @batch.packages.page(params[:page])
+    @packages = @batch.packages.in_progress.order("status_id desc").page(params[:page])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -88,5 +87,27 @@ class BatchesController < ApplicationController
 
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+  end
+
+  def batch_type(batch)
+    types = []
+    types << batch.batch_type.name
+    types << 'oral history' if batch.oral_history?
+    types << 'dark archive' if batch.dark_archive?
+    types.join(', ')
+  end
+
+  def approvable(package)
+    [
+      Status.approved,
+      Status.rejected,
+      Status.awaiting_approval,
+      Status.under_review,
+    ].map { |s| s.id }.
+      include?(package.status_id)
+  end
+
+  def rejectable(package)
+    approvable(package)
   end
 end

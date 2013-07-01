@@ -2,8 +2,13 @@
 <%= show_title %>
 
 <p>
-  <b>Batch type:</b>
-  <%= render @batch.batch_type %>
+  <b>Name:</b>
+  <%= @batch.name %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= render @batch.status %>
 </p>
 
 <p>
@@ -17,23 +22,8 @@
 </p>
 
 <p>
-  <b>Name:</b>
-  <%= @batch.name %>
-</p>
-
-<p>
-  <b>Oral history:</b>
-  <%= @batch.oral_history %>
-</p>
-
-<p>
-  <b>Dark archive:</b>
-  <%= @batch.dark_archive %>
-</p>
-
-<p>
-  <b>Status:</b>
-  <%= render @batch.status %>
+  <b>Batch type:</b>
+  <%= batch_type(@batch) %>
 </p>
 
 <h2>Packages</h2>

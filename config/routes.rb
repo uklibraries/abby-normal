@@ -17,6 +17,10 @@ AbbyNormal::Application.routes.draw do
 
   resources :packages do
     resources :tasks
+    member do
+      put :approve
+      put :reject
+    end
   end
 
 
