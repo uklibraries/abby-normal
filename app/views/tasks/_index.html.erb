@@ -1,0 +1,30 @@
+<%= paginate @tasks %>
+
+<table class="table table-striped">
+  <tr>
+    <th><%= sortable "package_id", "Package" %></th>
+    <th><%= sortable "type_id", "Type" %></th>
+    <th><%= sortable "status_id", "Status" %></th>
+    <% if can? :edit, Task %>
+    <th></th>
+    <% end %>
+    <% if can? :destroy, Task %>
+    <th></th>
+    <% end %>
+  </tr>
+
+<% @tasks.each do |task| %>
+  <tr>
+    <td><%= link_to render(task.package), task %></td>
+    <td><%= render task.type %></td>
+    <td><%= render task.status %></td>
+    <% if can? :edit, Task %>
+    <td><%= link_to 'Edit', edit_task_path(task) %></td>
+    <% end %>
+    <% if can? :destroy, Task %>
+    <td><%= link_to 'Destroy', task, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <% end %>
+  </tr>
+<% end %>
+</table>
+

@@ -17,7 +17,7 @@ class BatchesController < ApplicationController
   # GET /batches/1
   # GET /batches/1.json
   def show
-    @packages = @batch.packages.in_progress.order("status_id desc").page(params[:page])
+    @packages = @batch.packages.in_progress.where(:requires_approval => true).order("status_id desc").page(params[:page])
 
     respond_to do |format|
       format.html # show.html.erb

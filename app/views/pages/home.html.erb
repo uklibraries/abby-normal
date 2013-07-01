@@ -14,10 +14,12 @@ Welcome.  There are so many things to make and things to do.
     <%= link_to "Submit a batch", new_batch_path %>
   </li>
   <% end %>
+  <% if can? :approve, Package %>
   <li>
     <i class="icon-eye-open"></i>
     <%= link_to "Inspect batches", batches_path %>
   </li>
+  <% end %>
 </ul>
 <% else %>
 <p class="lead">

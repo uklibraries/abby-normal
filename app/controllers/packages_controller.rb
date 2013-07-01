@@ -1,13 +1,17 @@
 class PackagesController < ApplicationController
   before_filter :authenticate_user!
   load_and_authorize_resource
-  helper_method :sort_column, :sort_direction, :inspection_link, :discussion_link, :approvable, :rejectable
+  helper_method :sort_column, :sort_direction, :approvable, :rejectable, :package_type
 
   # GET /packages
   # GET /packages.json
   def index
-    @batch = Batch.find(params[:batch_id])
-    @packages = @batch.packages.order("#{sort_column} #{sort_direction}").page(params[:page])
+    if params[:batch_id]
+      @batch = Batch.find(params[:batch_id])
+      @packages = @batch.packages.order("#{sort_column} #{sort_direction}").page(params[:page])
+    else
+      @packages = Package.order("#{sort_column} #{sort_direction}").page(params[:page])
+    end
 
     respond_to do |format|
       format.html # index.html.erb
@@ -18,6 +22,8 @@ class PackagesController < ApplicationController
   # GET /packages/1
   # GET /packages/1.json
   def show
+    @tasks = @package.tasks.in_progress.order("status_id desc").page(params[:page])
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @package }
@@ -120,5 +126,14 @@ class PackagesController < ApplicationController
 
   def rejectable(package)
     approvable(package)
+  end
+
+  def package_type(package)
+    types = []
+    types << Batch.find(package.batch_id).batch_type.name
+    types << 'oral history' if package.oral_history?
+    types << 'dark archive' if package.dark_archive?
+    types << 'online' if package.online?
+    types.join(', ')
   end
 end

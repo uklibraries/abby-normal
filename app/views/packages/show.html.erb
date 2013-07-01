@@ -3,22 +3,42 @@
 
 <p>
   <b>Batch:</b>
-  <%= render @package.batch %>
+  <%= link_to render(@package.batch), batch_path(@package.batch_id) %>
 </p>
 
 <p>
   <b>Status:</b>
   <%= render @package.status %>
+  <% if can?(:approve, Package) and approvable(@package) %>
+    <%= link_to render('packages/approval'), approve_package_path(@package), method: :put %>
+  <% end %>
+  <% if can?(:reject, Package) and rejectable(@package) %>
+    <%= link_to render('packages/rejection'), reject_package_path(@package), method: :put %>
+  <% end %>
 </p>
 
+<% if @package.online? %>
+  <b>Live link:</b>
+  <%= link_to live_link(@package), live_link(@package) %>
+<% end %>
+
+<% if inspection_link(@package) %>
 <p>
-  <b>Sip path:</b>
-  <%= @package.sip_path %>
+  <b>Inspection link:</b>
+  <%= link_to inspection_link(@package), inspection_link(@package) %>
 </p>
+<% end %>
+
+<% if discussion_link(@package) %>
+<p>
+  <b>Discussion link:</b>
+  <%= link_to discussion_link(@package), discussion_link(@package) %>
+</p>
+<% end %>
 
 <p>
-  <b>Aip identifier:</b>
-  <%= @package.aip_identifier %>
+  <b>Package type:</b>
+  <%= package_type(@package) %>
 </p>
 
 <p>
@@ -27,20 +47,17 @@
 </p>
 
 <p>
-  <b>Oral history:</b>
-  <%= @package.oral_history %>
+  <b>Aip identifier:</b>
+  <%= @package.aip_identifier %>
 </p>
 
 <p>
-  <b>Dark archive:</b>
-  <%= @package.dark_archive %>
+  <b>Sip path:</b>
+  <%= @package.sip_path %>
 </p>
 
-<p>
-  <b>Approved:</b>
-  <%= @package.approved %>
-</p>
-
+<h2>Tasks</h2>
+<%= render 'tasks/index' %>
 
 <% if can? :update, @package %>
 <%= link_to 'Edit', edit_package_path(@package) %> |

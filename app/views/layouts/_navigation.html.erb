@@ -1,9 +1,16 @@
 <%= link_to "Home", root_path, :class => 'brand' %>
 <ul class="nav">
   <% if user_signed_in? %>
+  <% if can? :create, Batch %>
   <li>
-    <%= link_to "Batches", batches_path %>
+    <%= link_to "Submit a batch", new_batch_path %>
   </li>
+  <% end %>
+  <% if can? :approve, Package %>
+  <li>
+    <%= link_to "Inspect batches", batches_path %>
+  </li>
+  <% end %>
   <% if can? :manage, Package %>
   <li>
     <%= link_to "Packages", packages_path %>

@@ -8,6 +8,14 @@ class Task < ActiveRecord::Base
   before_update :check_status
   has_paper_trail
 
+  scope :in_progress, :conditions => [
+    Status.ready,
+    Status.not_ready,
+    Status.started,
+    Status.completed,
+    Status.failed,
+  ].map { |s| "status_id = #{s.id}" }.join(' OR ')
+
   def notify message
     if message
       method = "when_#{message.to_s.gsub(/\s+/, '_')}".to_sym

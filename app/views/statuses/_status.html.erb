@@ -1,1 +1,9 @@
-<%= status.name %>
+<%- case status.name -%>
+<%- when "approved" -%>
+  <span class="label label-success">approved</span>
+<%- when "rejected" -%>
+  <span class="label label-important">rejected</span>
+<%- else -%>
+  <span class="label"><%= status.name %></span>
+<%- end -%>
+
