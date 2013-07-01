@@ -1,6 +1,7 @@
 class BatchesController < ApplicationController
   before_filter :authenticate_user!
   load_and_authorize_resource
+  helper_method :sort_column, :sort_direction
 
   # GET /batches
   # GET /batches.json
@@ -74,5 +75,15 @@ class BatchesController < ApplicationController
       format.html { redirect_to batches_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+
+  def sort_column
+    Batch.column_names.include?(params[:sort]) ? params[:sort] : "name"
+  end
+
+  def sort_direction
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
   end
 end

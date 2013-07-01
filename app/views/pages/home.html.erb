@@ -8,10 +8,12 @@ Welcome.  There are so many things to make and things to do.
 </p>
 
 <ul class="unstyled">
+  <% if can? :create, Batch %>
   <li>
     <i class="icon-plus-sign"></i>
     <%= link_to "Submit a batch", new_batch_path %>
   </li>
+  <% end %>
   <li>
     <i class="icon-eye-open"></i>
     <%= link_to "Inspect batches", batches_path %>

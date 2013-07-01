@@ -1,6 +1,8 @@
 <%= simple_form_for(@batch) do |f| %>
   <%= f.input :name %>
 
+  <%= f.input :discussion_link %>
+
   <%= f.association :batch_type, :default => 1 %>
 
   <% unless f.object.new_record? %>

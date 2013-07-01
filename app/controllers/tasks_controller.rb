@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   before_filter :authenticate_user!
   load_and_authorize_resource
+  helper_method :sort_column, :sort_direction
 
   # GET /tasks
   # GET /tasks.json
@@ -72,5 +73,15 @@ class TasksController < ApplicationController
       format.html { redirect_to tasks_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+
+  def sort_column
+    Task.column_names.include?(params[:sort]) ? params[:sort] : "status_id"
+  end
+
+  def sort_direction
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
   end
 end

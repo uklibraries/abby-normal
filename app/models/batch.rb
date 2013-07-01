@@ -3,7 +3,7 @@ class Batch < ActiveRecord::Base
   belongs_to :server
   belongs_to :status
   has_many :packages, dependent: :destroy
-  attr_accessible :dark_archive, :name, :oral_history, :batch_type_id, :server_id, :status_id
+  attr_accessible :dark_archive, :name, :oral_history, :batch_type_id, :server_id, :status_id, :discussion_link
   before_create :mark_as_started
   after_create :create_packages
   before_update :check_status

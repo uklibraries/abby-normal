@@ -5,12 +5,11 @@
 
 <table class="table table-striped">
   <tr>
-    <th><%= sortable "batch_id", "Batch" %></th>
+    <th><%= sortable "sip_path", "Sip name" %></th>
     <th><%= sortable "status_id", "Status" %></th>
-    <th><%= sortable "sip_path", "Sip path" %></th>
-    <th>Dip identifier</th>
-    <th>Inspect</th>
-    <th>Discuss</th>
+    <th><%= sortable "batch_id", "Batch" %></th>
+    <th></th>
+    <th></th>
     <th></th>
     <th></th>
     <th></th>
@@ -18,12 +17,15 @@
 
 <% @packages.each do |package| %>
   <tr>
-    <td><%= render package.batch %></td>
-    <td><%= render package.status %></td>
     <td><%= File.basename package.sip_path %></td>
-    <td><%= package.dip_identifier %></td>
-    <td></td>
-    <td></td>
+    <td><%= render package.status %></td>
+    <td><%= render package.batch %></td>
+    <td>
+    <% if inspection_link(package) %>
+    <%= link_to 'Inspect', inspection_link(package) %>
+    <% end %>
+    </td>
+    <td><%= link_to 'Discuss', discussion_link(package) %></td>
     <td><%= link_to 'Show', package %></td>
     <td><%= link_to 'Edit', edit_package_path(package) %></td>
     <td><%= link_to 'Destroy', package, method: :delete, data: { confirm: 'Are you sure?' } %></td>

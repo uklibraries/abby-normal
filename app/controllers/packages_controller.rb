@@ -1,7 +1,7 @@
 class PackagesController < ApplicationController
   before_filter :authenticate_user!
   load_and_authorize_resource
-  helper_method :sort_column, :sort_direction
+  helper_method :sort_column, :sort_direction, :inspection_link, :discussion_link
 
   # GET /packages
   # GET /packages.json
@@ -83,5 +83,19 @@ class PackagesController < ApplicationController
 
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+  end
+
+  def inspection_link(package)
+    if package.dip_identifier
+      batch = Batch.find(package.batch_id)
+      type = BatchType.find(batch.batch_type_id).name
+      test_site = 'http://kdl.kyvl.org/test/catalog'
+      dip_id = package.dip_identifier + (['EAD', 'oral history'].include?(type) ? "" : "_1")
+      "#{test_site}/#{dip_id}"
+    end
+  end
+
+  def discussion_link(package)
+    Batch.find(package.batch_id).discussion_link
   end
 end
