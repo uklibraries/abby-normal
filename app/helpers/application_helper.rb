@@ -32,4 +32,18 @@ module ApplicationHelper
             {:class => css_class}
 
   end
+
+  def inspection_link(package)
+    if package.dip_identifier
+      batch = Batch.find(package.batch_id)
+      type = BatchType.find(batch.batch_type_id).name
+      test_site = 'http://kdl.kyvl.org/test/catalog'
+      dip_id = package.dip_identifier + (['EAD', 'oral history'].include?(type) ? "" : "_1")
+      "#{test_site}/#{dip_id}"
+    end
+  end
+
+  def discussion_link(package)
+    Batch.find(package.batch_id).discussion_link
+  end
 end

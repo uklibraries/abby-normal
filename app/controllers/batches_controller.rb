@@ -17,6 +17,9 @@ class BatchesController < ApplicationController
   # GET /batches/1
   # GET /batches/1.json
   def show
+    #@packages = @batch.packages.where.not(status_id: Status.archived.id).not(status_id: Status.completed.id).order("status_id sort desc").page(params[:page])
+    @packages = @batch.packages.page(params[:page])
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @batch }

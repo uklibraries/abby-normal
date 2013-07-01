@@ -36,6 +36,9 @@
   <%= render @batch.status %>
 </p>
 
+<h2>Packages</h2>
+<%= render 'packages/index' %>
+
 <% if can? :update, @batch %>
 <%= link_to 'Edit', edit_batch_path(@batch) %> |
 <% end %>

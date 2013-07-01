@@ -9,20 +9,26 @@
     <th><%= sortable "status_id", "Status" %></th>
     <th><%= sortable "batch_type_id", "Type" %></th>
     <th><%= sortable "server_id", "Server" %></th>
+    <% if can? :edit, Batch %>
     <th></th>
+    <% end %>
+    <% if can? :destroy, Batch %>
     <th></th>
-    <th></th>
+    <% end %>
   </tr>
 
 <% @batches.each do |batch| %>
   <tr>
-    <td><%= batch.name %></td>
+    <td><%= link_to batch.name, batch %></td>
     <td><%= render batch.status %></td>
     <td><%= render batch.batch_type %></td>
     <td><%= render batch.server %></td>
-    <td><%= link_to 'Show', batch %></td>
+    <% if can? :edit, Batch %>
     <td><%= link_to 'Edit', edit_batch_path(batch) %></td>
+    <% end %>
+    <% if can? :destroy, Batch %>
     <td><%= link_to 'Destroy', batch, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <% end %>
   </tr>
 <% end %>
 </table>

@@ -15,10 +15,14 @@ AbbyNormal::Application.routes.draw do
   resources :tasks
 
 
-  resources :packages
+  resources :packages do
+    resources :tasks
+  end
 
 
-  resources :batches
+  resources :batches do
+    resources :packages
+  end
 
 
   # The priority is based upon order of creation:
