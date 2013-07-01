@@ -13,10 +13,10 @@
   'completed', 
   'archived', 
   'not ready',
-  'awaiting approval',
-  'under review',
   'approved',
   'rejected',
+  'awaiting approval',
+  'under review',
 ].each do |status|
   Status.create(name: status)
 end
