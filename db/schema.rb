@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130628135800) do
+ActiveRecord::Schema.define(:version => 20130701124503) do
 
   create_table "api_keys", :force => true do |t|
     t.string   "access_token"
@@ -30,11 +30,12 @@ ActiveRecord::Schema.define(:version => 20130628135800) do
     t.integer  "batch_type_id"
     t.integer  "server_id"
     t.string   "name"
-    t.boolean  "oral_history",  :default => false
-    t.boolean  "dark_archive",  :default => false
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.boolean  "oral_history",    :default => false
+    t.boolean  "dark_archive",    :default => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.integer  "status_id"
+    t.string   "discussion_link"
   end
 
   add_index "batches", ["batch_type_id"], :name => "index_batches_on_batch_type_id"

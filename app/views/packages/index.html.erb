@@ -5,13 +5,12 @@
 
 <table class="table table-striped">
   <tr>
-    <th>Batch</th>
-    <th>Status</th>
-    <th>Sip path</th>
-    <th>Aip identifier</th>
+    <th><%= sortable "batch_id", "Batch" %></th>
+    <th><%= sortable "status_id", "Status" %></th>
+    <th><%= sortable "sip_path", "Sip path" %></th>
     <th>Dip identifier</th>
-    <th>Approved</th>
-    <th>Requires approval</th>
+    <th>Inspect</th>
+    <th>Discuss</th>
     <th></th>
     <th></th>
     <th></th>
@@ -22,10 +21,9 @@
     <td><%= render package.batch %></td>
     <td><%= render package.status %></td>
     <td><%= File.basename package.sip_path %></td>
-    <td><%= package.aip_identifier %></td>
     <td><%= package.dip_identifier %></td>
-    <td><%= package.approved %></td>
-    <th><%= package.requires_approval %></td>
+    <td></td>
+    <td></td>
     <td><%= link_to 'Show', package %></td>
     <td><%= link_to 'Edit', edit_package_path(package) %></td>
     <td><%= link_to 'Destroy', package, method: :delete, data: { confirm: 'Are you sure?' } %></td>
