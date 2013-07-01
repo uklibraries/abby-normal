@@ -5,10 +5,10 @@
 
 <table class="table table-striped">
   <tr>
-    <th><%= sortable "name" %></th>
-    <th><%= sortable "status_id", "Status" %></th>
-    <th><%= sortable "batch_type_id", "Type" %></th>
-    <th><%= sortable "server_id", "Server" %></th>
+    <th>Name</th>
+    <th>Status</th>
+    <th>Type</th>
+    <th>Server</th>
     <% if can? :edit, Batch %>
     <th></th>
     <% end %>
@@ -35,4 +35,6 @@
 
 <br />
 
+<% if can? :manage, Batch %>
 <%= link_to 'New Batch', new_batch_path %>
+<% end %>
