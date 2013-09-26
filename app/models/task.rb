@@ -108,8 +108,6 @@ class Task < ActiveRecord::Base
       batch = Batch.find(package.batch_id)
       server = Server.find(batch.server_id)
       Resque.enqueue(LaunchRemoteJob, {server: server, package: package, task: self})
-      self.status = Status.started
-      self.save
     end
   end
 end
