@@ -6,6 +6,7 @@ class Task < ActiveRecord::Base
   before_create :set_type_and_status
   after_create :check_package
   before_update :check_status
+  after_commit :enqueue_remote_job
   has_paper_trail
 
   scope :in_progress, :conditions => [
@@ -75,6 +76,7 @@ class Task < ActiveRecord::Base
     if [Status.ready, Status.not_ready].include? self.status
       if self.ready?
         self.status = Status.ready
+        enqueue_remote_job
       else
         self.status = Status.not_ready
       end
@@ -97,6 +99,17 @@ class Task < ActiveRecord::Base
     if self.type == Type.approve_package
       package = Package.find(self.package_id)
       package.update_attributes(:status_id => Status.awaiting_approval.id)
+    end
+  end
+
+  def enqueue_remote_job
+    if self.status == Status.ready and not(self.destroyed?)
+      package = Package.find(self.package_id)
+      batch = Batch.find(package.batch_id)
+      server = Server.find(batch.server_id)
+      Resque.enqueue(LaunchRemoteJob, {server: server, package: package, task: self})
+      self.status = Status.started
+      self.save
     end
   end
 end
