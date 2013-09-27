@@ -107,7 +107,8 @@ class Task < ActiveRecord::Base
       package = Package.find(self.package_id)
       batch = Batch.find(package.batch_id)
       server = Server.find(batch.server_id)
-      Resque.enqueue(LaunchRemoteJob, {server: server, package: package, task: self})
+      type = Type.find(self.type_id)
+      Resque.enqueue(LaunchRemoteJob, {server: server, package: package, task: self, type: type})
     end
   end
 end
