@@ -17,6 +17,7 @@
 
 # Ignore local files
 /config/initializers/secret_token.rb
+/config/initializers/devise.rb
 /config/database.yml
 /public/assets
 /test
