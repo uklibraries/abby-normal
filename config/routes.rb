@@ -7,8 +7,10 @@ AbbyNormal::Application.routes.draw do
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
       resources :packages
 
+      match 'packages/:id' => 'packages#update', :via => :post
+
       match 'tasks/claim' => 'tasks#claim', :via => :post
-      match 'tasks/:id' => 'tasks#update', :via => :put
+      match 'tasks/:id' => 'tasks#update', :via => :post
     end
   end
 
