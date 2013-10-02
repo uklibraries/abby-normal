@@ -5,6 +5,6 @@ class ApiConstraints
   end
 
   def matches?(req)
-    @default || req.headers['Accepts'].include?("application/vnd.presence.abby.normal.v#{@version}")
+    @default || req.headers['Accept'].include?("application/vnd.abby.normal.v#{@version}")
   end
 end
