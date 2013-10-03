@@ -7,6 +7,9 @@ class Task < ActiveRecord::Base
   after_create :check_package
   before_update :check_status
   after_commit :enqueue_remote_job
+  validates :package_id, uniqueness: {scope: :type_id,
+    message: "should be unique for a given type"
+  }
   has_paper_trail
 
   scope :in_progress, :conditions => [
