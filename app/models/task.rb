@@ -71,7 +71,9 @@ class Task < ActiveRecord::Base
   def check_status
     if self.status_id_changed?
       determine_readiness
-      create_next_task
+      if self.status == Status.completed
+        create_next_task
+      end
     end
   end
 
@@ -79,7 +81,6 @@ class Task < ActiveRecord::Base
     if [Status.ready, Status.not_ready].include? self.status
       if self.ready?
         self.status = Status.ready
-        enqueue_remote_job
       else
         self.status = Status.not_ready
       end
