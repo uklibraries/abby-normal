@@ -2,9 +2,9 @@ class Package < ActiveRecord::Base
   belongs_to :batch
   belongs_to :status
   has_many :tasks, dependent: :destroy
-  attr_accessible :aip_identifier, :approved, :dark_archive, :dip_identifier, :oral_history, :sip_path, :batch_id, :status_id, :requires_approval
+  attr_accessible :aip_identifier, :approved, :batch_id, :dark_archive, :dip_identifier, :oral_history, :reprocessing, :requires_approval, :sip_path, :status_id
   before_create :mark_as_started
-  after_create :create_first_task
+  after_create :maybe_create_first_task
   before_update :check_status
   after_update :check_task_statuses
   after_save :ping_batch
@@ -40,8 +40,10 @@ class Package < ActiveRecord::Base
     self.status ||= Status.started
   end
 
-  def create_first_task
-    self.tasks.create
+  def maybe_create_first_task
+    unless self.reprocessing?
+      self.tasks.create
+    end
   end
 
   def check_status

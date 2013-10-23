@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130701190243) do
+ActiveRecord::Schema.define(:version => 20131023141920) do
 
   create_table "api_keys", :force => true do |t|
     t.string   "access_token"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(:version => 20130701190243) do
     t.datetime "updated_at",                         :null => false
     t.integer  "status_id"
     t.string   "discussion_link"
+    t.boolean  "reprocessing",    :default => false
   end
 
   add_index "batches", ["batch_type_id"], :name => "index_batches_on_batch_type_id"
@@ -67,6 +68,7 @@ ActiveRecord::Schema.define(:version => 20130701190243) do
     t.datetime "updated_at",                           :null => false
     t.boolean  "requires_approval"
     t.boolean  "online",            :default => false
+    t.boolean  "reprocessing",      :default => false
   end
 
   add_index "packages", ["batch_id"], :name => "index_packages_on_batch_id"

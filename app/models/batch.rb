@@ -3,7 +3,7 @@ class Batch < ActiveRecord::Base
   belongs_to :server
   belongs_to :status
   has_many :packages, dependent: :destroy
-  attr_accessible :dark_archive, :name, :oral_history, :batch_type_id, :server_id, :status_id, :discussion_link
+  attr_accessible :batch_type_id, :dark_archive, :discussion_link, :name, :oral_history, :reprocessing, :server_id, :status_id
   before_create :mark_as_started
   after_create :create_packages
   before_update :check_status
@@ -54,6 +54,7 @@ class Batch < ActiveRecord::Base
         sip_path: sip_path,
         oral_history: self.oral_history,
         dark_archive: self.dark_archive,
+        reprocessing: self.reprocessing,
         approved: false,
         requires_approval: tickets[i] <= limit
       )
