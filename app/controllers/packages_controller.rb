@@ -22,7 +22,7 @@ class PackagesController < ApplicationController
   # GET /packages/1
   # GET /packages/1.json
   def show
-    @tasks = @package.tasks.in_progress.order("status_id desc").page(params[:page])
+    @tasks = @package.tasks.order("type_id desc").page(params[:page])
 
     respond_to do |format|
       format.html # show.html.erb
