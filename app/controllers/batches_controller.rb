@@ -18,6 +18,7 @@ class BatchesController < ApplicationController
   # GET /batches/1.json
   def show
     @packages = @batch.packages.in_progress.where(:requires_approval => true).order("status_id desc").page(params[:page])
+    @failures = @batch.tasks.where(status_id: Status.failed.id).count
 
     respond_to do |format|
       format.html # show.html.erb

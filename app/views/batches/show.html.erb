@@ -9,6 +9,10 @@
 <p>
   <b>Status:</b>
   <%= render @batch.status %>
+  <% if @failures > 0 %>
+,
+current failing tasks: <%= @failures %>
+  <% end %>
 </p>
 
 <p>
