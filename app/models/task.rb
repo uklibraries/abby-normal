@@ -12,6 +12,8 @@ class Task < ActiveRecord::Base
   }
   has_paper_trail
 
+  delegate :batch, to: :package
+
   scope :in_progress, :conditions => [
     Status.ready,
     Status.not_ready,

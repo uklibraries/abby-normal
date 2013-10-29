@@ -9,6 +9,8 @@ class Batch < ActiveRecord::Base
   before_update :check_status
   has_paper_trail
 
+  has_many :tasks, through: :packages
+
   def notify message
     if message
       method = "when_#{message.to_s.gsub(/\s+/, '_')}".to_sym
