@@ -117,4 +117,8 @@ class Task < ActiveRecord::Base
       Resque.enqueue(LaunchRemoteJob, {server: server, package: package, task: self, type: type})
     end
   end
+
+  def to_s
+    "#{self.id} (#{self.type.name} - #{self.package.name} - #{self.batch.server.name})"
+  end
 end
