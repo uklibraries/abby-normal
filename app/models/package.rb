@@ -18,6 +18,13 @@ class Package < ActiveRecord::Base
     Status.started,
   ].map { |s| "status_id = #{s.id}" }.join(' OR ')
 
+  def done?
+    self.tasks.where(
+      status_id: Status.ready.id,
+      type_id: Type.archive_package.id
+    ).count > 0
+  end
+
   def name
     File.basename self.sip_path
   end

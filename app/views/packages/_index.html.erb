@@ -23,7 +23,12 @@
 <% @packages.each do |package| %>
   <tr>
     <td><%= link_to File.basename(package.sip_path), package %></td>
-    <td><%= render package.status %></td>
+    <td><% if package.done? %>
+      <span class="label label-success">done</span>
+    <% else %>
+      <%= render package.status %>
+    <% end %>
+    </td>
     <td>
     <% if inspection_link(package) %>
     <%= link_to 'Inspect', inspection_link(package) %>

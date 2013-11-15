@@ -8,13 +8,14 @@
 
 <p>
   <b>Status:</b>
-  <%= render @batch.status %>
-  <% if @failures > 0 %>
-,
-current failing tasks: <%= @failures %>
-  <% end %>
   <% if @batch.done? %>
 <span class="label label-success">done</span>
+  <% else %>
+    <%= render @batch.status %>
+    <% if @failures > 0 %>
+,
+current failing tasks: <%= @failures %>
+    <% end %>
   <% end %>
 </p>
 

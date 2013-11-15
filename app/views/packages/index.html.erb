@@ -18,7 +18,12 @@
 <% @packages.each do |package| %>
   <tr>
     <td><%= File.basename package.sip_path %></td>
-    <td><%= render package.status %></td>
+    <td><% if package.done? %>
+      <span class="label label-success">done</span>
+    <% else %>
+      <%= render package.status %>
+    <% end %>
+    </td>
     <td><%= render package.batch %></td>
     <td>
     <% if inspection_link(package) %>

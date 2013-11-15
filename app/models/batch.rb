@@ -12,11 +12,9 @@ class Batch < ActiveRecord::Base
   has_many :tasks, through: :packages
 
   def done?
-    self.tasks.where(
-      status_id: Status.ready.id,
-      type_id: Type.archive_package.id
-    ).count ==
-    self.packages.count
+    self.packages.select {|p|
+      p.done?
+    }.count == self.packages.count
   end
 
   def notify message
