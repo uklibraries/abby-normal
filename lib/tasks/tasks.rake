@@ -15,17 +15,15 @@ namespace :tasks do
       t.save
     }
 
-    Batch.all.each {|b|
-      t = b.tasks.where(
+    t = Task.order("RAND()").where(
         status_id: Status.failed.id,
         type_id: index_type_ids
-      ).first
+    ).first
 
-      if t
-        puts "Retrying failing task #{t}"
-        t.status = Status.ready
-        t.save
-      end
-    }
+    if t
+      puts "Retrying failing task #{t}"
+      t.status = Status.ready
+      t.save
+    end
   end
 end
