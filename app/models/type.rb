@@ -11,4 +11,5 @@ class Type < ActiveRecord::Base
 
   type_by_name "Approve Package"
   type_by_name "Index into Test Solr"
+  type_by_name "Archive Package"
 end

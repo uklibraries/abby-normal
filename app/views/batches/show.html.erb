@@ -13,6 +13,9 @@
 ,
 current failing tasks: <%= @failures %>
   <% end %>
+  <% if @batch.done? %>
+<span class="label label-success">done</span>
+  <% end %>
 </p>
 
 <p>

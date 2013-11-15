@@ -20,7 +20,12 @@
 <% @batches.each do |batch| %>
   <tr>
     <td><%= link_to batch.name, batch %></td>
-    <td><%= render batch.status %></td>
+    <td><% if batch.done? %>
+      <span class="label label-success">done</span>
+    <% else %>
+      <%= render batch.status %>
+    <% end %>
+    </td>
     <td><%= render batch.batch_type %></td>
     <td><%= render batch.server %></td>
     <% if can? :edit, Batch %>
