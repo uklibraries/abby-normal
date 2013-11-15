@@ -85,6 +85,7 @@ class Batch < ActiveRecord::Base
   end
 
   def approve_packages
+    return
     self.packages.where(status_id: [
       Status.awaiting_approval.id,
       Status.rejected.id,
