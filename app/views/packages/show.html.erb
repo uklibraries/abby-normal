@@ -17,7 +17,7 @@
   <% end %>
 </p>
 
-<% if @package.online? %>
+<% if @package.done? %>
   <b>Live link:</b>
   <%= link_to live_link(@package), live_link(@package) %>
 <% end %>
