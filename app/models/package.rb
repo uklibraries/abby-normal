@@ -2,10 +2,10 @@ class Package < ActiveRecord::Base
   belongs_to :batch
   belongs_to :status
   has_many :tasks, dependent: :destroy
-  attr_accessible :aip_identifier, :approved, :batch_id, :dark_archive, :dip_identifier, :oral_history, :reprocessing, :requires_approval, :sip_path, :status_id
+  attr_accessible :aip_identifier, :approved, :batch_id, :dark_archive, :dip_identifier, :local_aip_fixed, :local_dip_fixed, :oral_history, :remote_aip_fixed, :remote_dip_fixed, :remote_test_dip_fixed, :reprocessing, :requires_approval, :sip_path, :status_id
   before_create :mark_as_started
   after_create :maybe_create_first_task
-  before_update :check_status
+  before_update [:check_status, :check_fixity]
   after_update :check_task_statuses
   after_save :ping_batch
   has_paper_trail
@@ -69,6 +69,83 @@ class Package < ActiveRecord::Base
         batch.mark_reviewed
       end
     end 
+  end
+
+  def check_fixity
+    if self.local_aip_fixed_changed? and not(self.local_aip_fixed?)
+      self.transaction do
+        self.tasks.where(
+          "type_id >= ?",
+          Type.create_dip.id
+        ).each do |task|
+          task.destroy!
+        end
+        self.tasks.where(:type_id => Type.create_aip.id).each do |task|
+          task.update_attributes!(:status_id => Status.failed.id)
+        end
+        self.local_aip_fixed = nil
+      end
+    end
+
+    if self.local_dip_fixed_changed? and not(self.local_dip_fixed?)
+      self.transaction do
+        self.tasks.where(
+          "type_id >= ?",
+          Type.store_test_dip.id
+        ).each do |task|
+          task.destroy!
+        end
+        self.tasks.where(:type_id => Type.create_dip.id).each do |task|
+          task.update_attributes!(:status_id => Status.failed.id)
+        end
+        self.local_dip_fixed = nil
+      end
+    end
+
+    if self.remote_aip_fixed_changed? and not(self.remote_aip_fixed?)
+      self.transaction do
+        self.tasks.where(
+          "type_id >= ?",
+          Type.store_logs.id
+        ).each do |task|
+          task.destroy!
+        end
+        self.tasks.where(:type_id => Type.store_aip.id).each do |task|
+          task.update_attributes!(:status_id => Status.failed.id)
+        end
+        self.remote_aip_fixed = nil
+      end
+    end
+
+    if self.remote_dip_fixed_changed? and not(self.remote_dip_fixed?)
+      self.transaction do
+        self.tasks.where(
+          "type_id >= ?",
+          Type.store_oral_history_files.id
+        ).each do |task|
+          task.destroy!
+        end
+        self.tasks.where(:type_id => Type.store_dip.id).each do |task|
+          task.update_attributes!(:status_id => Status.failed.id)
+        end
+        self.remote_dip_fixed = nil
+      end
+    end
+
+    if self.remote_test_dip_fixed_changed? and not(self.remote_test_dip_fixed?)
+      self.transaction do
+        self.tasks.where(
+          "type_id >= ?",
+          Type.store_test_oral_history_files.id
+        ).each do |task|
+          task.destroy!
+        end
+        self.tasks.where(:type_id => Type.store_test_dip.id).each do |task|
+          task.update_attributes!(:status_id => Status.failed.id)
+        end
+        self.remote_test_dip_fixed = nil
+      end
+    end
   end
 
   def ping_batch

@@ -35,21 +35,27 @@ class Task < ActiveRecord::Base
   end
 
   def ready?
-    # We only block status progression at the
-    # ready/not ready stage.  Once an item has
-    # started, it will either complete or fail
-    # but not otherwise be blocked.
     if [Status.ready, Status.not_ready].include? self.status
-      true
-#      case self.type
-#
-#      # TO BE ADDED
-#
-#      # No other task types have prerequisites
-#      # beyond completion of the prior task
-#      else
-#        true
-#      end
+      case self.type
+
+      when Type.create_dip
+        self.local_aip_fixed?
+
+      when Type.store_test_dip
+        self.local_dip_fixed?
+
+      when Type.store_test_oral_history_files
+        self.remote_test_dip_fixed?
+
+      when Type.store_oral_history_files
+        self.remote_dip_fixed?
+
+      when Type.store_logs
+        self.remote_aip_fixed?
+
+      else
+        true
+      end
     else
       true
     end

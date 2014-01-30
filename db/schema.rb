@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131023141920) do
+ActiveRecord::Schema.define(:version => 20140130134339) do
 
   create_table "api_keys", :force => true do |t|
     t.string   "access_token"
@@ -61,14 +61,19 @@ ActiveRecord::Schema.define(:version => 20131023141920) do
     t.string   "sip_path"
     t.string   "aip_identifier"
     t.string   "dip_identifier"
-    t.boolean  "oral_history",      :default => false
-    t.boolean  "dark_archive",      :default => false
+    t.boolean  "oral_history",          :default => false
+    t.boolean  "dark_archive",          :default => false
     t.boolean  "approved"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
     t.boolean  "requires_approval"
-    t.boolean  "online",            :default => false
-    t.boolean  "reprocessing",      :default => false
+    t.boolean  "online",                :default => false
+    t.boolean  "reprocessing",          :default => false
+    t.boolean  "local_aip_fixed"
+    t.boolean  "local_dip_fixed"
+    t.boolean  "remote_test_dip_fixed"
+    t.boolean  "remote_dip_fixed"
+    t.boolean  "remote_aip_fixed"
   end
 
   add_index "packages", ["batch_id"], :name => "index_packages_on_batch_id"
