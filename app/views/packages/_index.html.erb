@@ -30,8 +30,10 @@
     <% end %>
     </td>
     <td>
-    <% if inspection_link(package) %>
-    <%= link_to 'Inspect', inspection_link(package) %>
+    <% if package.done? %>
+      <%= link_to 'Inspect (live)', live_link(package) %>
+    <% elsif inspection_link(package) %>
+      <%= link_to 'Inspect', inspection_link(package) %>
     <% end %>
     </td>
     <% if can? :approve, Package %>
