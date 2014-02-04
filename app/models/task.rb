@@ -39,19 +39,19 @@ class Task < ActiveRecord::Base
       case self.type
 
       when Type.create_dip
-        self.local_aip_fixed?
+        self.package.local_aip_fixed?
 
       when Type.store_test_dip
-        self.local_dip_fixed?
+        self.package.local_dip_fixed?
 
       when Type.store_test_oral_history_files
-        self.remote_test_dip_fixed?
+        self.package.remote_test_dip_fixed?
 
       when Type.store_oral_history_files
-        self.remote_dip_fixed?
+        self.package.remote_dip_fixed?
 
       when Type.store_logs
-        self.remote_aip_fixed?
+        self.package.remote_aip_fixed?
 
       else
         true
