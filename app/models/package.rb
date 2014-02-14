@@ -61,14 +61,13 @@ class Package < ActiveRecord::Base
         if batch.status == Status.started
           batch.update_attributes(:status_id => Status.awaiting_approval.id)
         end
-      when Status.approved
-        self.approved = true
-        complete_approve_package_task
-        batch.mark_reviewed
       when Status.rejected
         batch.mark_reviewed
       end
     end 
+    if self.status == Status.approved
+      self.approved = true
+    end
   end
 
   def check_fixity
@@ -151,6 +150,7 @@ class Package < ActiveRecord::Base
   def ping_batch
     if self.status == Status.approved
       Batch.find(self.batch_id).mark_reviewed
+      complete_approve_package_task
     end
   end
 
