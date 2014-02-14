@@ -78,7 +78,7 @@ class Package < ActiveRecord::Base
           "type_id >= ?",
           Type.create_dip.id
         ).each do |task|
-          task.destroy!
+          task.destroy
         end
         self.tasks.where(:type_id => Type.create_aip.id).each do |task|
           task.update_attributes!(:status_id => Status.failed.id)
@@ -93,7 +93,7 @@ class Package < ActiveRecord::Base
           "type_id >= ?",
           Type.store_test_dip.id
         ).each do |task|
-          task.destroy!
+          task.destroy
         end
         self.tasks.where(:type_id => Type.create_dip.id).each do |task|
           task.update_attributes!(:status_id => Status.failed.id)
@@ -108,7 +108,7 @@ class Package < ActiveRecord::Base
           "type_id >= ?",
           Type.store_logs.id
         ).each do |task|
-          task.destroy!
+          task.destroy
         end
         self.tasks.where(:type_id => Type.store_aip.id).each do |task|
           task.update_attributes!(:status_id => Status.failed.id)
@@ -123,7 +123,7 @@ class Package < ActiveRecord::Base
           "type_id >= ?",
           Type.store_oral_history_files.id
         ).each do |task|
-          task.destroy!
+          task.destroy
         end
         self.tasks.where(:type_id => Type.store_dip.id).each do |task|
           task.update_attributes!(:status_id => Status.failed.id)
