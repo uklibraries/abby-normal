@@ -16,6 +16,7 @@
 *.swp
 
 # Ignore local files
+/config/nodes.yml
 /config/initializers/secret_token.rb
 /config/initializers/devise.rb
 /config/database.yml

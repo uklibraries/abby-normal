@@ -46,3 +46,6 @@ gem 'high_voltage'
 gem 'kaminari'
 gem 'paper_trail'
 gem 'resque'
+
+gem 'pairtree'
+gem 'ruby-progressbar'
