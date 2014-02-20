@@ -151,6 +151,8 @@ class Package < ActiveRecord::Base
     if self.status == Status.approved
       Batch.find(self.batch_id).mark_reviewed
       complete_approve_package_task
+    elsif self.status == Status.awaiting_approval
+      Batch.find(self.batch_id).update_attributes(:status_id => Status.awaiting_approval.id)
     end
   end
 
