@@ -94,7 +94,7 @@ class Batch < ActiveRecord::Base
     return
     self.packages.where(status_id: [
       Status.awaiting_approval.id,
-      Status.rejected.id,
+      Status.rejected.id, # XXX: deprecated
     ]).each do |package|
       package.update_attributes(
         :approved => true,

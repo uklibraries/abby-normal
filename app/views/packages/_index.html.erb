@@ -9,9 +9,6 @@
     <% if can? :approve, Package %>
     <th></th>
     <% end %>
-    <% if can? :reject, Package %>
-    <th></th>
-    <% end %>
     <% if can? :edit, Package %>
     <th></th>
     <% end %>
@@ -43,13 +40,6 @@
       <% end %>
     <% end %>
     </td>
-    <% if can? :reject, Package %>
-    <td>
-      <% if rejectable(package) %>
-      <%= link_to render('packages/rejection'), reject_package_path(package), method: :put %>
-      <% end %>
-    </td>
-    <% end %>
     <td><%= link_to 'Discuss', discussion_link(package) %></td>
     <% if can? :edit, Package %>
     <td><%= link_to 'Edit', edit_package_path(package) %></td>

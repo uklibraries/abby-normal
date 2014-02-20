@@ -101,13 +101,14 @@ class BatchesController < ApplicationController
   def approvable(package)
     [
       Status.approved,
-      Status.rejected,
+      Status.rejected, # XXX: deprecated
       Status.awaiting_approval,
       Status.under_review,
     ].map { |s| s.id }.
       include?(package.status_id)
   end
 
+  # XXX: deprecated
   def rejectable(package)
     approvable(package)
   end

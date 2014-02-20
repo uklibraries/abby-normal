@@ -12,7 +12,7 @@ class Package < ActiveRecord::Base
 
   scope :in_progress, :conditions => [
     Status.approved,
-    Status.rejected,
+    Status.rejected, # XXX: deprecated
     Status.awaiting_approval,
     Status.under_review,
     Status.started,

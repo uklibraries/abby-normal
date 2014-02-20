@@ -17,7 +17,7 @@ class Status < ActiveRecord::Base
   status_by_name :under_review
   status_by_name :awaiting_approval
   status_by_name :approved
-  status_by_name :rejected
+  status_by_name :rejected # XXX: deprecated
 
   def self.by_name name
     Status.where(:name => name).first

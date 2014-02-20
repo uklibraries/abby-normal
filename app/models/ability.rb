@@ -8,7 +8,7 @@ class Ability
       can :read, :all
       if user.role? :approver
         can :approve, Package
-        can :reject, Package
+        can :reject, Package # XXX: deprecated
       end
     end
   end

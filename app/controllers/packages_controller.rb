@@ -93,17 +93,6 @@ class PackagesController < ApplicationController
     end
   end
 
-  def reject
-    @package = Package.find(params[:id])
-    authorize! :reject, @package
-    @package.update_attributes(:status_id => Status.rejected.id)
-
-    respond_to do |format|
-      format.html { redirect_to batch_url(@package.batch_id) }
-      format.json { head :no_content }
-    end
-  end
-
   private
 
   def sort_column
@@ -117,13 +106,14 @@ class PackagesController < ApplicationController
   def approvable(package)
     [
       Status.approved,
-      Status.rejected,
+      Status.rejected, # XXX: deprecated
       Status.awaiting_approval,
       Status.under_review,
     ].map { |s| s.id }.
       include?(package.status_id)
   end
 
+  # XXX: deprecated
   def rejectable(package)
     approvable(package)
   end

@@ -12,9 +12,6 @@
   <% if can?(:approve, Package) and approvable(@package) %>
     <%= link_to render('packages/approval'), approve_package_path(@package), method: :put %>
   <% end %>
-  <% if can?(:reject, Package) and rejectable(@package) %>
-    <%= link_to render('packages/rejection'), reject_package_path(@package), method: :put %>
-  <% end %>
 </p>
 
 <% if @package.done? %>
