@@ -11,6 +11,10 @@ class Batch < ActiveRecord::Base
 
   has_many :tasks, through: :packages
 
+  def failures
+    self.tasks.where(status_id: Status.failed.id).count
+  end
+
   def done?
     self.packages.select {|p|
       p.done?

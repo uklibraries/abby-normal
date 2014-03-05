@@ -19,7 +19,11 @@
 
 <% @batches.each do |batch| %>
   <tr>
-    <td><%= link_to batch.name, batch %></td>
+    <td><%= link_to batch.name, batch %>
+        <% if batch.failures.to_i > 0 %>
+          <%= '(' + batch.failures.to_s + ')' %>
+        <% end %>
+    </td>
     <td><% if batch.done? %>
       <span class="label label-success">done</span>
     <% else %>
