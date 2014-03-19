@@ -1,7 +1,7 @@
 class BatchesController < ApplicationController
   before_filter :authenticate_user!
   load_and_authorize_resource
-  helper_method :sort_column, :sort_direction, :batch_type, :approvable, :rejectable
+  helper_method :sort_column, :sort_direction, :batch_type, :approvable
 
   # GET /batches
   # GET /batches.json
@@ -100,16 +100,9 @@ class BatchesController < ApplicationController
 
   def approvable(package)
     [
-      Status.approved,
-      Status.rejected, # XXX: deprecated
       Status.awaiting_approval,
       Status.under_review,
     ].map { |s| s.id }.
       include?(package.status_id)
-  end
-
-  # XXX: deprecated
-  def rejectable(package)
-    approvable(package)
   end
 end
