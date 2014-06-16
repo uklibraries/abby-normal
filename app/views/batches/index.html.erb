@@ -44,6 +44,6 @@
 
 <br />
 
-<% if can? :manage, Batch %>
+<% if can? :manage, Batch and @batches.count < 25 %>
 <%= link_to 'New Batch', new_batch_path %>
 <% end %>
