@@ -1,4 +1,4 @@
-<% title "Package #{File.basename @package.sip_path}" %>
+<% title "Package #{File.basename(@package.sip_path).gsub(/_/, " ")}" %>
 <%= show_title %>
 
 <p>
