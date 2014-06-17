@@ -89,4 +89,24 @@ namespace :batch do
       puts "No such batch (BATCH_ID: #{batch_id})"
     end
   end
+
+  desc "Reset failed index tasks for a batch"
+  task :reset_failed_index => :environment do
+    batch_id = ENV['BATCH_ID'].to_i
+    batch = Batch.find(batch_id)
+    if batch
+      batch.packages.each do |package|
+        package.tasks.where(:type_id => [
+                              Type.index_into_solr.id, 
+                              Type.index_into_test_solr.id
+                           ]).where(:status_id => Status.failed.id).each do |task|
+          puts "Resetting failed index task: batch #{batch_id}, package #{package.id}, task #{task.id}"
+          task.update_attributes(:status_id => Status.ready.id)
+        end
+      end
+      puts "Done."
+    else
+      puts "No such batch (BATCH_ID: #{batch_id})"
+    end
+  end
 end
