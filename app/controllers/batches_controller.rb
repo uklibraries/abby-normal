@@ -7,7 +7,7 @@ class BatchesController < ApplicationController
   # GET /batches.json
   def index
     @batches = Batch.page(params[:page]).per(15)
-    @page = params[:page]
+    @page = params[:page] || 1
 
     respond_to do |format|
       format.html # index.html.erb
