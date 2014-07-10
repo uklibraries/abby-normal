@@ -60,6 +60,62 @@ class PackageValidator
   end
 end
 
+class DipValidator
+  def initialize package
+    @package = package
+    config = YAML.load_file File.join('config', 'nodes.yml')
+    dip_tree = Pairtree.at(config['dips_test'], create: true)
+    @dip_path = dip_tree.get(@package.dip_identifier).path
+  end
+
+  def valid?
+    read_dip_checksums
+    unless dip_complete?
+      puts "DIP INCOMPLETE"
+      return false
+    end
+    unless dip_consistent?
+      puts "DIP INCONSISTENT"
+      return false
+    end
+    true
+  end
+
+  def read_dip_checksums
+    @dip = {}
+    File.readlines(File.join(@dip_path, 'manifest-md5.txt')).each do |line|
+      line.chomp!
+      sum, file = line.split(/\s+data\//)
+      @dip[file] = sum
+    end
+    @dip
+  end
+
+  def dip_consistent?
+    @dip.each_pair do |file, expected_sum|
+      path = File.join(@dip_path, 'data', file)
+      dip_sum = Digest::MD5.file(path).hexdigest
+      unless dip_sum == expected_sum
+        puts "** inconsistent #{file}"
+        return false
+      end
+    end
+    true
+  end
+
+  def dip_complete?
+    base = Pathname.new(@dip_path)
+    @dip.each_pair do |file, expected_sum|
+      path = File.join(@dip_path, 'data', file)
+      unless File.exist?(path)
+        puts "** missing #{file}"
+        return false
+      end
+    end
+    true
+  end
+end
+
 namespace :batch do
   desc "Validate fixity of packages in a batch"
   task :validate => :environment do
@@ -80,6 +136,38 @@ namespace :batch do
           good += 1
         else
           pb.log "NOT ok #{package.name} (#{package.aip_identifier})"
+          bad += 1
+        end
+        pb.increment
+      end
+      puts "Done (good: #{good}, bad: #{bad}, total: #{pb.total})."
+    else
+      puts "No such batch (BATCH_ID: #{batch_id})"
+    end
+  end
+
+  desc "Validate fixity of DIPs in progress"
+  task :validate_dips => :environment do
+    batch_id = ENV['BATCH_ID'].to_i
+    batch = Batch.find(batch_id)
+    if batch
+      pb = ProgressBar.create( :format         => '%a %bᗧ%i %p%% %t',
+                               :progress_mark  => ' ',
+                               :remainder_mark => '･')
+      packages = batch.packages.select {|p|
+        p.tasks.where(:type_id => Type.store_test_dip.id, :status_id => Status.archived.id).count > 0
+      }
+      pb.total = packages.count
+      pb.log "Validating batch #{batch.name} (#{batch_id})..."
+      good = 0
+      bad = 0
+      packages.each do |package|
+        pv = DipValidator.new package
+        if pv.valid?
+          pb.log "ok #{package.name} (#{package.dip_identifier})"
+          good += 1
+        else
+          pb.log "NOT ok #{package.name} (#{package.dip_identifier})"
           bad += 1
         end
         pb.increment
