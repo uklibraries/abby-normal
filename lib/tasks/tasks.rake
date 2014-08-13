@@ -15,7 +15,8 @@ namespace :tasks do
       t.save
     }
 
-    t = Task.order("RAND()").where(
+    #t = Task.order("RAND()").where(
+    t = Task.order("id").where(
         status_id: Status.failed.id,
         type_id: index_type_ids
     ).first
