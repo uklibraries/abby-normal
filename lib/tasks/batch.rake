@@ -140,7 +140,7 @@ namespace :batch do
         end
         pb.increment
       end
-      puts "Done (good: #{good}, bad: #{bad}, total: #{pb.total})."
+      puts "Validation of batch #{batch.name} (#{batch_id}) complete\nDone (good: #{good}, bad: #{bad}, total: #{pb.total})."
     else
       puts "No such batch (BATCH_ID: #{batch_id})"
     end
@@ -172,8 +172,7 @@ namespace :batch do
         end
         pb.increment
       end
-      puts "Validation of batch #{batch.name} (#{batch_id}) complete"
-      puts "Done (good: #{good}, bad: #{bad}, total: #{pb.total})."
+      puts "Validation of batch #{batch.name} (#{batch_id}) complete\nDone (good: #{good}, bad: #{bad}, total: #{pb.total})."
     else
       puts "No such batch (BATCH_ID: #{batch_id})"
     end
