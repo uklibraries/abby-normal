@@ -197,4 +197,34 @@ namespace :batch do
       puts "No such batch (BATCH_ID: #{batch_id})"
     end
   end
+
+  desc "Rebuild JSON and reindex a batch"
+  task :reindex => :environment do
+    batch_id = ENV['BATCH_ID'].to_i
+    batch = Batch.find(batch_id)
+    if batch
+      batch.packages.each do |package|
+        package.tasks.where('type_id > ?',
+                              Type.create_solr_json.id)
+        .each do |task|
+          puts "Rolling back post-JSON tasks: batch #{batch_id}, package #{package.id}, task #{task.id}"
+          task.destroy
+        end
+
+        package.tasks.where(:type_id =>
+                              Type.create_solr_json.id)
+        .each do |task|
+          puts "Restarting JSON task: batch #{batch_id}, package #{package.id}, task #{task.id}"
+          task.update_attribute(:status, Status.ready)
+        end
+
+        puts "Clearing approval for package #{package.id}"
+        package.update_attribute(:status, Status.started)
+      end
+      puts "Clearing approval for batch #{batch_id}"
+      batch.update_attribute(:status, Status.started)
+    else
+      puts "No such batch (BATCH_ID: #{batch_id})"
+    end
+  end
 end
