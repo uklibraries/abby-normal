@@ -198,6 +198,40 @@ namespace :batch do
     end
   end
 
+  desc "Prepare for rollback (requires xtpath)"
+  task :rollback_script => :environment do
+    dip_source = ENV['DIP_SRC']
+    dip_target = ENV['DIP_TGT']
+    aip_source = ENV['AIP_SRC']
+    aip_target = ENV['AIP_TGT']
+    sip_target = ENV['SIP_TGT']
+    batch_id = ENV['BATCH_ID'].to_i
+    batch = Batch.find(batch_id)
+    if batch
+      done_packages = batch.packages.select do |package|
+        package.tasks.where(type_id: Type.archive_package.id).count == 1
+      end
+
+      puts "# On processing server"
+
+      # restock DIPs
+      dip_ids = done_packages.collect {|p| p.dip_identifier}
+      puts "for id in #{dip_ids.join(" ")}; do rsync -avPOK #{dip_source}/\`xtpath $id\`/ #{dip_target}/\`xtpath $id\`; done"
+
+      # restock AIPs
+      aip_ids = done_packages.collect {|p| p.aip_identifier}
+      puts "for id in #{aip_ids.join(" ")}; do rsync -avPOK #{aip_source}/\`xtpath $id\`/ #{aip_target}/\`xtpath $id\`; done"
+
+      # create shell SIPs (identifiers match those of AIPs on processing server)
+      puts "for id in #{aip_ids.join(" ")}; do mkdir -p #{sip_target}/\`xtpath $id\`; done"
+
+      puts
+      puts "# In Abby Normal\nbundle exec rake batch:reindex RAILS_ENV=production BATCH_ID=#{batch_id}"
+    else
+      STDERR.puts "No such batch (BATCH_ID: #{batch_id})"
+    end
+  end
+
   desc "Rebuild JSON and reindex a batch"
   task :reindex => :environment do
     batch_id = ENV['BATCH_ID'].to_i
