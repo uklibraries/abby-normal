@@ -100,10 +100,10 @@ class BatchesController < ApplicationController
   end
 
   def approvable(package)
-    [
+    ([
       Status.awaiting_approval,
       Status.under_review,
     ].map { |s| s.id }.
-      include?(package.status_id)
+      include?(package.status_id)) and not(package.batch.reprocessing)
   end
 end
