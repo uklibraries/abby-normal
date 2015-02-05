@@ -4,7 +4,7 @@ class Batch < ActiveRecord::Base
   belongs_to :status
   has_many :packages, dependent: :destroy
   attr_accessible :batch_type_id, :dark_archive, :discussion_link, :name, :oral_history, :reprocessing, :server_id, :status_id
-  before_create :mark_as_started
+  before_create :mark_as_started, :check_if_reprocessing
   after_create :create_packages
   before_update :check_status
   has_paper_trail
@@ -49,6 +49,18 @@ class Batch < ActiveRecord::Base
     self.status ||= Status.started
   end
 
+  def check_if_reprocessing
+    base = '/opt/pdp/services/staging/processing'
+    reprocessing = File.join(
+      base,
+      self.name,
+      'reprocessing.txt'
+    )
+    if File.file? reprocessing
+      self.reprocessing = true
+    end
+  end
+
   def create_packages
     # find the right place for this
     base = '/opt/pdp/services/staging/processing'
@@ -58,8 +70,29 @@ class Batch < ActiveRecord::Base
       'sips'
     )
     sip_paths = Dir.glob("#{path}/*")
+    m = {}
+    if self.reprocessing
+      repro = File.join(
+        base,
+        self.name,
+        'reprocessing.txt'
+      )
+      if File.file? repro
+        File.open(repro, 'r').each_line do |line|
+          if line =~ /^[^#\ ]/
+            line.strip!
+            pieces = line.split(/\s+/)
+            sip = pieces[2]
+            m[sip] = {
+              :dip => pieces[0],
+              :aip => pieces[1],
+            }
+          end
+        end
+      end
+    end
     sip_paths.each_with_index do |sip_path, i|
-      Package.create(
+      h = {
         batch_id: self.id,
         sip_path: sip_path,
         oral_history: self.oral_history,
@@ -67,7 +100,13 @@ class Batch < ActiveRecord::Base
         reprocessing: self.reprocessing,
         approved: false,
         requires_approval: true
-      )
+      }
+      sip = File.basename(sip_path)
+      if m.has_key? sip
+        h[:dip_identifier] = m[sip][:dip]
+        h[:aip_identifier] = m[sip][:aip]
+      end
+      Package.create(h)
     end
   end
 

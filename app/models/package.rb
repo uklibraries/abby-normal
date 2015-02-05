@@ -48,8 +48,12 @@ class Package < ActiveRecord::Base
   end
 
   def maybe_create_first_task
-    unless self.reprocessing?
+    if not(self.reprocessing?)
       self.tasks.create
+    else
+      unless (self.aip_identifier.blank? or self.dip_identifier.blank?)
+        self.tasks.create(:type_id => Type.pull_sip.id)
+      end
     end
   end
 
