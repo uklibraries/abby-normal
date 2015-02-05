@@ -57,9 +57,7 @@ class Batch < ActiveRecord::Base
       self.name,
       'sips'
     )
-    limit = 100
     sip_paths = Dir.glob("#{path}/*")
-    tickets = (1..sip_paths.count).to_a.shuffle
     sip_paths.each_with_index do |sip_path, i|
       Package.create(
         batch_id: self.id,
@@ -68,7 +66,7 @@ class Batch < ActiveRecord::Base
         dark_archive: self.dark_archive,
         reprocessing: self.reprocessing,
         approved: false,
-        requires_approval: tickets[i] <= limit
+        requires_approval: true
       )
     end
   end
