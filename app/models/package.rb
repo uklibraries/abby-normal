@@ -2,7 +2,7 @@ class Package < ActiveRecord::Base
   belongs_to :batch
   belongs_to :status
   has_many :tasks, dependent: :destroy
-  attr_accessible :aip_identifier, :approved, :batch_id, :dark_archive, :dip_identifier, :local_aip_fixed, :local_dip_fixed, :oral_history, :remote_aip_fixed, :remote_dip_fixed, :remote_test_dip_fixed, :reprocessing, :requires_approval, :sip_path, :status_id
+  attr_accessible :aip_identifier, :approved, :batch_id, :dark_archive, :dip_identifier, :local_aip_fixed, :local_dip_fixed, :oral_history, :remote_aip_fixed, :remote_dip_fixed, :remote_test_dip_fixed, :reprocessing, :requires_approval, :sip_path, :status_id, :generate_dip_identifiers
   before_create :mark_as_started
   after_create :maybe_create_first_task
   before_update [:check_status, :check_fixity]
