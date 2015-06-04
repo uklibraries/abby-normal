@@ -16,15 +16,17 @@ namespace :tasks do
     }
 
     #t = Task.order("RAND()").where(
-    t = Task.order("id").where(
+    ts = Task.order("id").where(
         status_id: Status.failed.id,
         type_id: index_type_ids
-    ).first
+    ).take(4)
 
-    if t
-      puts "Retrying failing task #{t}"
-      t.status = Status.ready
-      t.save
+    ts.each do |t|
+      if t
+        puts "Retrying failing task #{t}"
+        t.status = Status.ready
+        t.save
+      end
     end
   end
 end
